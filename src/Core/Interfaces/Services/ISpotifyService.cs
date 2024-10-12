@@ -13,4 +13,6 @@ public interface ISpotifyService
     Task AddTrackAsync(TrackUri trackUri);
     Task NextTrackAsync();
     Task PreviousTrackAsync();
+    Task PlayAsync();
+    Task PauseAsync();
 }

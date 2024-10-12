@@ -5,17 +5,17 @@ using Presentation.Models;
 
 namespace Presentation.Endpoints;
 
-public class NextTrack(
+public class Pause(
     ISpotifyService spotifyService) : EndpointWithoutRequest
 {
     public override void Configure()
     {
-        Post("/player/next");
+        Post("/player/pause");
         AllowAnonymous();
     }
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        await spotifyService.NextTrackAsync();
+        await spotifyService.PauseAsync();
     }
 }

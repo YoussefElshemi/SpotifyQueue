@@ -13,4 +13,6 @@ public interface ISpotifyClient
     Task AddTrackAsync(TrackUri trackUri, AccessToken accessToken);
     Task NextTrackAsync(AccessToken accessToken);
     Task PreviousTrackAsync(AccessToken accessToken);
+    Task PlayAsync(AccessToken accessToken);
+    Task PauseAsync(AccessToken accessToken);
 }

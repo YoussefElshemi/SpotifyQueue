@@ -10,7 +10,7 @@ public class PreviousTrack(
 {
     public override void Configure()
     {
-        Post("/track/previous");
+        Post("/player/previous");
         AllowAnonymous();
     }
 

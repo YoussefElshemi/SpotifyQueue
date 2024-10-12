@@ -88,6 +88,18 @@ public class SpotifyService(
         await spotifyClient.PreviousTrackAsync(accessToken);
     }
 
+    public async Task PlayAsync()
+    {
+        var accessToken = await GetAccessTokenAsync();
+        await spotifyClient.PlayAsync(accessToken);
+    }
+
+    public async Task PauseAsync()
+    {
+        var accessToken = await GetAccessTokenAsync();
+        await spotifyClient.PauseAsync(accessToken);
+    }
+
 
     private async Task<AccessToken> GetAccessTokenAsync()
     {

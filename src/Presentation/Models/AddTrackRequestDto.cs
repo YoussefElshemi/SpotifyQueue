@@ -2,5 +2,5 @@
 
 public record AddTrackRequestDto
 {
-    public required string TrackUri { get; set; }
+    public required string TrackUri { get; init; }
 }

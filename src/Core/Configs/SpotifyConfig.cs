@@ -8,5 +8,7 @@ public record SpotifyConfig
     public string DevicesPath { get; init; } = null!;
     public string QueuePath { get; init; } = null!;
     public string NextTrackPath { get; init; } = null!;
-    public string PreviousTrackPath { get; set; } = null!;
+    public string PreviousTrackPath { get; init; } = null!;
+    public string PlayPath { get; init; } = null!;
+    public string PausePath { get; init; } = null!;
 }
