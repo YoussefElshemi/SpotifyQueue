@@ -18,6 +18,16 @@ builder.Services.AddOptions<AppConfig>().BindConfiguration(nameof(AppConfig));
 var appConfig = new AppConfig();
 config.GetSection(nameof(AppConfig)).Bind(appConfig);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "AllowAllOrigins",
+        configurePolicy: policy =>
+        {
+            policy.AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
 builder.Services.AddFastEndpoints();
 builder.Services.SwaggerDocument();
 builder.Services.AddEndpointsApiExplorer();
@@ -28,6 +38,7 @@ builder.Services.AddScoped<ISpotifyService, SpotifyService>();
 
 var app = builder.Build();
 
+app.UseCors("AllowAllOrigins");
 app.UseHttpsRedirection();
 app.UseFastEndpoints();
 app.UseSwaggerGen();
@@ -40,6 +51,7 @@ query.Add("redirect_uri", appConfig.SpotifyAuthConfig.RedirectUri);
 OpenUrl($"{appConfig.SpotifyAuthConfig.BaseUrl}{appConfig.SpotifyAuthConfig.AuthorizePath}?{query}");
 
 app.Run();
+return;
 
 void OpenUrl(string url)
 {

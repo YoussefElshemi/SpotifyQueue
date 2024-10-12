@@ -238,4 +238,25 @@ public class SpotifyClient(
 
         await client.SendAsync(request);
     }
+
+    public async Task<StateResponse> GetStateAsync(AccessToken accessToken)
+    {
+        var url = $"{config.Value.SpotifyConfig.BaseUrl}{config.Value.SpotifyConfig.StatePath}";
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri(url),
+            Headers =
+            {
+                Authorization = new AuthenticationHeaderValue("Bearer", accessToken)
+            }
+        };
+
+        var response = await client.SendAsync(request);
+        var content  = await response.Content.ReadAsStringAsync();
+        var stateResponseDto = JsonSerializer.Deserialize<StateResponseDto>(content)!;
+
+        return StateResponseMapper.Map(stateResponseDto);
+    }
 }

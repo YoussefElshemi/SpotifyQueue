@@ -15,4 +15,5 @@ public interface ISpotifyService
     Task PreviousTrackAsync();
     Task PlayAsync();
     Task PauseAsync();
+    Task<StateResponse> GetStateAsync();
 }

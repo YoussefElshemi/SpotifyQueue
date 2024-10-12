@@ -15,4 +15,5 @@ public interface ISpotifyClient
     Task PreviousTrackAsync(AccessToken accessToken);
     Task PlayAsync(AccessToken accessToken);
     Task PauseAsync(AccessToken accessToken);
+    Task<StateResponse> GetStateAsync(AccessToken accessToken);
 }

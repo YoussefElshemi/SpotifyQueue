@@ -1,7 +1,5 @@
 ﻿using Core.Interfaces.Services;
-using Core.ValueObjects;
 using FastEndpoints;
-using Presentation.Models;
 
 namespace Presentation.Endpoints;
 

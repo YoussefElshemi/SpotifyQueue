@@ -11,4 +11,5 @@ public record SpotifyConfig
     public string PreviousTrackPath { get; init; } = null!;
     public string PlayPath { get; init; } = null!;
     public string PausePath { get; init; } = null!;
+    public string StatePath { get; init; } = null!;
 }

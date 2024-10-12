@@ -100,6 +100,12 @@ public class SpotifyService(
         await spotifyClient.PauseAsync(accessToken);
     }
 
+    public async Task<StateResponse> GetStateAsync()
+    {
+        var accessToken = await GetAccessTokenAsync();
+        return await spotifyClient.GetStateAsync(accessToken);
+    }
+
 
     private async Task<AccessToken> GetAccessTokenAsync()
     {
