@@ -12,6 +12,7 @@ public static class StateResponseMapper
         {
             ProgressMs = new ProgressMs(stateResponseDto.ProgressMs),
             IsPlaying = new IsPlaying(stateResponseDto.IsPlaying),
+            ShuffleState = new ShuffleState(stateResponseDto.ShuffleState),
             Item = ItemMapper.Map(stateResponseDto.Item)
         };
     }

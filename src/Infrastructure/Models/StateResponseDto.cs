@@ -10,6 +10,9 @@ public record StateResponseDto
     [JsonPropertyName("is_playing")]
     public required bool IsPlaying { get; init; }
 
+    [JsonPropertyName("shuffle_state")]
+    public required bool ShuffleState { get; init; }
+
     [JsonPropertyName("item")]
     public required ItemDto Item { get; init; }
 }
