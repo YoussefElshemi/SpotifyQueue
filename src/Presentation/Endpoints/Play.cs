@@ -1,10 +1,12 @@
 ﻿using Core.Interfaces.Services;
+using Core.ValueObjects;
 using FastEndpoints;
+using Presentation.Models;
 
 namespace Presentation.Endpoints;
 
 public class Play(
-    ISpotifyService spotifyService) : EndpointWithoutRequest
+    ISpotifyService spotifyService) : Endpoint<PlayRequestDto>
 {
     public override void Configure()
     {
@@ -12,8 +14,15 @@ public class Play(
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(CancellationToken ct)
+    public override async Task HandleAsync(PlayRequestDto playRequestDto, CancellationToken ct)
     {
-        await spotifyService.PlayAsync();
+        if (playRequestDto.TrackUri is not null)
+        {
+            await spotifyService.PlayTrackAsync(new TrackUri(playRequestDto.TrackUri));
+        }
+        else
+        {
+            await spotifyService.PlayAsync();
+        }
     }
 }
