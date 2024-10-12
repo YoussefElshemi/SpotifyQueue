@@ -16,6 +16,9 @@ public record StateResponseDto
     [JsonPropertyName("repeat_state")]
     public required string RepeatState { get; init; }
 
+    [JsonPropertyName("device")]
+    public required DeviceDto Device { get; init; }
+
     [JsonPropertyName("item")]
     public required ItemDto Item { get; init; }
 }

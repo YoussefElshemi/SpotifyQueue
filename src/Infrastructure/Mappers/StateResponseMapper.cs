@@ -14,6 +14,7 @@ public static class StateResponseMapper
             IsPlaying = new IsPlaying(stateResponseDto.IsPlaying),
             ShuffleState = new ShuffleState(stateResponseDto.ShuffleState),
             RepeatState = new RepeatState(stateResponseDto.RepeatState),
+            Device = DeviceMapper.Map(stateResponseDto.Device),
             Item = ItemMapper.Map(stateResponseDto.Item)
         };
     }

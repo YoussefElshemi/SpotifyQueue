@@ -13,6 +13,7 @@ public static class StateResponseDtoMapper
             IsPlaying = stateResponse.IsPlaying,
             ShuffleState = stateResponse.ShuffleState,
             RepeatState = stateResponse.RepeatState,
+            Device = DeviceDtoMapper.Map(stateResponse.Device),
             Item = ItemDtoMapper.Map(stateResponse.Item)
         };
     }
