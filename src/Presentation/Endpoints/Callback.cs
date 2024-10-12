@@ -17,5 +17,7 @@ public class Callback(
     {
         var code = Query<string>("code")!;
         await spotifyService.AuthenticateAsync(new Code(code));
+
+        await SendOkAsync(ct);
     }
 }

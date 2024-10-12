@@ -301,4 +301,24 @@ public class SpotifyClient(
 
         await client.SendAsync(request);
     }
+
+    public async Task RepeatAsync(RepeatState repeatState, AccessToken accessToken)
+    {
+        var url = $"{config.Value.SpotifyConfig.BaseUrl}{config.Value.SpotifyConfig.RepeatPath}";
+
+        var query = HttpUtility.ParseQueryString(string.Empty);
+        query.Add("state", repeatState);
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Put,
+            RequestUri = new Uri($"{url}?{query}"),
+            Headers =
+            {
+                Authorization = new AuthenticationHeaderValue("Bearer", accessToken)
+            }
+        };
+
+        await client.SendAsync(request);
+    }
 }
