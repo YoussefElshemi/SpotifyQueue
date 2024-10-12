@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9E00E442-A4A2-4737-8870-656A15FB263A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{45FFF031-0498-4ED6-B05D-CF535245A081}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "src\Presentation\Presentation.csproj", "{73C6633D-BFD4-4EF9-A7C1-FC1A0C04269D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "src\Core\Core.csproj", "{D6724C9A-9D9B-4C45-8CBA-8730FF14487A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\Infrastructure\Infrastructure.csproj", "{D7CB9B3B-3D15-4B26-A914-B6DA25C9D87C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{73C6633D-BFD4-4EF9-A7C1-FC1A0C04269D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73C6633D-BFD4-4EF9-A7C1-FC1A0C04269D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73C6633D-BFD4-4EF9-A7C1-FC1A0C04269D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73C6633D-BFD4-4EF9-A7C1-FC1A0C04269D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6724C9A-9D9B-4C45-8CBA-8730FF14487A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6724C9A-9D9B-4C45-8CBA-8730FF14487A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6724C9A-9D9B-4C45-8CBA-8730FF14487A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6724C9A-9D9B-4C45-8CBA-8730FF14487A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7CB9B3B-3D15-4B26-A914-B6DA25C9D87C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7CB9B3B-3D15-4B26-A914-B6DA25C9D87C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7CB9B3B-3D15-4B26-A914-B6DA25C9D87C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7CB9B3B-3D15-4B26-A914-B6DA25C9D87C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C8CC4E00-BEB6-4BA0-B4DB-668463E2F3BF} = {9E00E442-A4A2-4737-8870-656A15FB263A}
+		{73C6633D-BFD4-4EF9-A7C1-FC1A0C04269D} = {9E00E442-A4A2-4737-8870-656A15FB263A}
+		{D6724C9A-9D9B-4C45-8CBA-8730FF14487A} = {9E00E442-A4A2-4737-8870-656A15FB263A}
+		{D7CB9B3B-3D15-4B26-A914-B6DA25C9D87C} = {9E00E442-A4A2-4737-8870-656A15FB263A}
+	EndGlobalSection
+EndGlobal

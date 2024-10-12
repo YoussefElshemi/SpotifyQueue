@@ -1,0 +1,173 @@
+﻿using System.Net.Http.Headers;
+using System.Text.Json;
+using System.Web;
+using Core.Configs;
+using Core.Interfaces.Services;
+using Core.Models;
+using Core.ValueObjects;
+using Infrastructure.Mappers;
+using Infrastructure.Models;
+using Microsoft.Extensions.Options;
+
+namespace Infrastructure.Services;
+
+public class SpotifyClient(
+    HttpClient client,
+    IOptions<AppConfig> config) : ISpotifyClient
+{
+    public async Task<AuthenticationResponse> AuthenticateAsync(Code code)
+    {
+        var url = $"{config.Value.SpotifyAuthConfig.BaseUrl}{config.Value.SpotifyAuthConfig.AuthenticationPath}";
+        var requestData = new Dictionary<string, string>
+        {
+            { "grant_type", "authorization_code" },
+            { "code", code },
+            { "redirect_uri", config.Value.SpotifyAuthConfig.RedirectUri }
+        };
+
+        var authenticationString = $"{config.Value.SpotifyAuthConfig.ClientId}:{config.Value.SpotifyAuthConfig.ClientSecret}";
+        var token = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(authenticationString));
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Post,
+            RequestUri = new Uri(url),
+            Content = new FormUrlEncodedContent(requestData),
+            Headers =
+            {
+                Authorization = new AuthenticationHeaderValue("Basic", token)
+            }
+        };
+
+        var response = await client.SendAsync(request);
+        var content  = await response.Content.ReadAsStringAsync();
+        var authenticationResponseDto = JsonSerializer.Deserialize<AuthenticationResponseDto>(content)!;
+
+        return AuthenticationResponseMapper.Map(authenticationResponseDto);
+    }
+
+    public async Task<RefreshTokenResponse> RefreshTokenAsync(RefreshToken refreshToken)
+    {
+        var url = $"{config.Value.SpotifyAuthConfig.BaseUrl}{config.Value.SpotifyAuthConfig.AuthenticationPath}";
+        var requestData = new Dictionary<string, string>
+        {
+            { "grant_type", "refresh_token" },
+            { "refresh_token", refreshToken},
+            { "client_id", config.Value.SpotifyAuthConfig.ClientId }
+        };
+
+        var authenticationString = $"{config.Value.SpotifyAuthConfig.ClientId}:{config.Value.SpotifyAuthConfig.ClientSecret}";
+        var token = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(authenticationString));
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Post,
+            RequestUri = new Uri(url),
+            Content = new FormUrlEncodedContent(requestData),
+            Headers =
+            {
+                Authorization = new AuthenticationHeaderValue("Basic", token)
+            }
+        };
+
+        var response = await client.SendAsync(request);
+        var content  = await response.Content.ReadAsStringAsync();
+        var refreshTokenResponseDto = JsonSerializer.Deserialize<RefreshTokenResponseDto>(content)!;
+
+        return RefreshTokenResponseMapper.Map(refreshTokenResponseDto);
+    }
+
+    public async Task<SearchResponse> SearchAsync(SearchRequest searchRequest, AccessToken accessToken)
+    {
+        var url = $"{config.Value.SpotifyConfig.BaseUrl}{config.Value.SpotifyConfig.SearchPath}";
+        var query = HttpUtility.ParseQueryString(string.Empty);
+        query.Add("q", searchRequest.SearchQuery);
+        query.Add("type", string.Join(',', searchRequest.Types).ToLower());
+
+        if (searchRequest.Limit is not null)
+        {
+            query.Add("limit", searchRequest.Limit.ToString());
+        }
+
+        if (searchRequest.Offset is not null)
+        {
+            query.Add("offset", searchRequest.Offset.ToString());
+        }
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri($"{url}?{query}"),
+            Headers =
+            {
+                Authorization = new AuthenticationHeaderValue("Bearer", accessToken)
+            }
+        };
+
+        var response = await client.SendAsync(request);
+        var content  = await response.Content.ReadAsStringAsync();
+        var searchResponseDto = JsonSerializer.Deserialize<SearchResponseDto>(content)!;
+
+        return SearchResponseMapper.Map(searchResponseDto);
+    }
+
+    public async Task<DevicesResponse> GetDevicesAsync(AccessToken accessToken)
+    {
+        var url = $"{config.Value.SpotifyConfig.BaseUrl}{config.Value.SpotifyConfig.DevicesPath}";
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri(url),
+            Headers =
+            {
+                Authorization = new AuthenticationHeaderValue("Bearer", accessToken)
+            }
+        };
+
+        var response = await client.SendAsync(request);
+        var content  = await response.Content.ReadAsStringAsync();
+        var devicesResponseDto = JsonSerializer.Deserialize<DevicesResponseDto>(content)!;
+
+        return DevicesResponseMapper.Map(devicesResponseDto);
+    }
+
+    public async Task<QueueResponse> GetQueueAsync(AccessToken accessToken)
+    {
+        var url = $"{config.Value.SpotifyConfig.BaseUrl}{config.Value.SpotifyConfig.QueuePath}";
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri(url),
+            Headers =
+            {
+                Authorization = new AuthenticationHeaderValue("Bearer", accessToken)
+            }
+        };
+
+        var response = await client.SendAsync(request);
+        var content  = await response.Content.ReadAsStringAsync();
+        var queueResponseDto = JsonSerializer.Deserialize<QueueResponseDto>(content)!;
+
+        return QueueResponseMapper.Map(queueResponseDto);
+    }
+
+    public async Task AddTrackAsync(TrackUri trackUri, AccessToken accessToken)
+    {
+        var url = $"{config.Value.SpotifyConfig.BaseUrl}{config.Value.SpotifyConfig.QueuePath}";
+
+        var query = HttpUtility.ParseQueryString(string.Empty);
+        query.Add("uri", trackUri);
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Post,
+            RequestUri = new Uri($"{url}?{query}"),
+            Headers =
+            {
+                Authorization = new AuthenticationHeaderValue("Bearer", accessToken)
+            }
+        };
+
+        await client.SendAsync(request);
+    }
+}
