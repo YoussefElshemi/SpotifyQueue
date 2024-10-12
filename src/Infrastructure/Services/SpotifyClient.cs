@@ -208,9 +208,9 @@ public class SpotifyClient(
     public async Task PlayTrackAsync(TrackUri trackUri, AccessToken accessToken)
     {
         var url = $"{config.Value.SpotifyConfig.BaseUrl}{config.Value.SpotifyConfig.PlayPath}";
-        var requestData = new Dictionary<string, string>
+        var requestData = new Dictionary<string, string[]>
         {
-            { "context_uri", trackUri }
+            { "uris", [trackUri] }
         };
 
         var request = new HttpRequestMessage
