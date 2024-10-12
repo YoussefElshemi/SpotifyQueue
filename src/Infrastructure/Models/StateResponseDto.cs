@@ -13,6 +13,9 @@ public record StateResponseDto
     [JsonPropertyName("shuffle_state")]
     public required bool ShuffleState { get; init; }
 
+    [JsonPropertyName("repeat_state")]
+    public required string RepeatState { get; init; }
+
     [JsonPropertyName("item")]
     public required ItemDto Item { get; init; }
 }
