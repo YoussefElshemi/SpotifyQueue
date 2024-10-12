@@ -11,4 +11,6 @@ public interface ISpotifyClient
     Task<DevicesResponse> GetDevicesAsync(AccessToken accessToken);
     Task<QueueResponse> GetQueueAsync(AccessToken accessToken);
     Task AddTrackAsync(TrackUri trackUri, AccessToken accessToken);
+    Task NextTrackAsync(AccessToken accessToken);
+    Task PreviousTrackAsync(AccessToken accessToken);
 }

@@ -7,4 +7,6 @@ public record SpotifyConfig
     public string SearchPath { get; init; } = null!;
     public string DevicesPath { get; init; } = null!;
     public string QueuePath { get; init; } = null!;
+    public string NextTrackPath { get; init; } = null!;
+    public string PreviousTrackPath { get; set; } = null!;
 }

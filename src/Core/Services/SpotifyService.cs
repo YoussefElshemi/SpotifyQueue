@@ -76,6 +76,18 @@ public class SpotifyService(
         throw new UnauthorizedAccessException($"Active device '{activeDevice.Name}' is not whitelisted.");
     }
 
+    public async Task NextTrackAsync()
+    {
+        var accessToken = await GetAccessTokenAsync();
+        await spotifyClient.NextTrackAsync(accessToken);
+    }
+
+    public async Task PreviousTrackAsync()
+    {
+        var accessToken = await GetAccessTokenAsync();
+        await spotifyClient.PreviousTrackAsync(accessToken);
+    }
+
 
     private async Task<AccessToken> GetAccessTokenAsync()
     {

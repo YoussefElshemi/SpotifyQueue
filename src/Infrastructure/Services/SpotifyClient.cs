@@ -170,4 +170,38 @@ public class SpotifyClient(
 
         await client.SendAsync(request);
     }
+
+    public async Task NextTrackAsync(AccessToken accessToken)
+    {
+        var url = $"{config.Value.SpotifyConfig.BaseUrl}{config.Value.SpotifyConfig.NextTrackPath}";
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Post,
+            RequestUri = new Uri(url),
+            Headers =
+            {
+                Authorization = new AuthenticationHeaderValue("Bearer", accessToken)
+            }
+        };
+
+        await client.SendAsync(request);
+    }
+
+    public async Task PreviousTrackAsync(AccessToken accessToken)
+    {
+        var url = $"{config.Value.SpotifyConfig.BaseUrl}{config.Value.SpotifyConfig.PreviousTrackPath}";
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Post,
+            RequestUri = new Uri(url),
+            Headers =
+            {
+                Authorization = new AuthenticationHeaderValue("Bearer", accessToken)
+            }
+        };
+
+        await client.SendAsync(request);
+    }
 }
