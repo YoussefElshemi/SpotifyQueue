@@ -112,6 +112,12 @@ public class SpotifyService(
         return await spotifyClient.GetStateAsync(accessToken);
     }
 
+    public async Task ShuffleAsync(ShuffleState shuffleState)
+    {
+        var accessToken = await GetAccessTokenAsync();
+        await spotifyClient.ShuffleAsync(shuffleState, accessToken);
+    }
+
 
     private async Task<AccessToken> GetAccessTokenAsync()
     {

@@ -281,4 +281,24 @@ public class SpotifyClient(
 
         return StateResponseMapper.Map(stateResponseDto);
     }
+
+    public async Task ShuffleAsync(ShuffleState shuffleState, AccessToken accessToken)
+    {
+        var url = $"{config.Value.SpotifyConfig.BaseUrl}{config.Value.SpotifyConfig.ShufflePath}";
+
+        var query = HttpUtility.ParseQueryString(string.Empty);
+        query.Add("state", shuffleState);
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Put,
+            RequestUri = new Uri($"{url}?{query}"),
+            Headers =
+            {
+                Authorization = new AuthenticationHeaderValue("Bearer", accessToken)
+            }
+        };
+
+        await client.SendAsync(request);
+    }
 }

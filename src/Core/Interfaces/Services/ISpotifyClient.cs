@@ -17,4 +17,5 @@ public interface ISpotifyClient
     Task PlayAsync(AccessToken accessToken);
     Task PauseAsync(AccessToken accessToken);
     Task<StateResponse> GetStateAsync(AccessToken accessToken);
+    Task ShuffleAsync(ShuffleState shuffleState, AccessToken accessToken);
 }

@@ -9,6 +9,11 @@ public readonly record struct IsPlaying
         Value = value;
     }
 
+    public static implicit operator string(IsPlaying value)
+    {
+        return value.Value.ToString();
+    }
+
     public static implicit operator bool(IsPlaying value)
     {
         return value.Value;

@@ -9,6 +9,11 @@ public readonly record struct IsPrivateSession
         Value = value;
     }
 
+    public static implicit operator string(IsPrivateSession value)
+    {
+        return value.Value.ToString();
+    }
+
     public static implicit operator bool(IsPrivateSession value)
     {
         return value.Value;

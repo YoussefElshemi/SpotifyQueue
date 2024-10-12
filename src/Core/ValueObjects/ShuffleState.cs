@@ -9,6 +9,11 @@ public readonly record struct ShuffleState
         Value = value;
     }
 
+    public static implicit operator string(ShuffleState value)
+    {
+        return value.Value.ToString();
+    }
+
     public static implicit operator bool(ShuffleState value)
     {
         return value.Value;

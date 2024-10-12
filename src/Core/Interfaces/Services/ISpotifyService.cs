@@ -17,4 +17,5 @@ public interface ISpotifyService
     Task PlayAsync();
     Task PauseAsync();
     Task<StateResponse> GetStateAsync();
+    Task ShuffleAsync(ShuffleState shuffleState);
 }

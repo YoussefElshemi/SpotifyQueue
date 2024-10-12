@@ -9,6 +9,11 @@ public readonly record struct IsRestricted
         Value = value;
     }
 
+    public static implicit operator string(IsRestricted value)
+    {
+        return value.Value.ToString();
+    }
+
     public static implicit operator bool(IsRestricted value)
     {
         return value.Value;

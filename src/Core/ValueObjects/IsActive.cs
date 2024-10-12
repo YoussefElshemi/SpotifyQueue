@@ -9,6 +9,11 @@ public readonly record struct IsActive
         Value = value;
     }
 
+    public static implicit operator string(IsActive value)
+    {
+        return value.Value.ToString();
+    }
+
     public static implicit operator bool(IsActive value)
     {
         return value.Value;

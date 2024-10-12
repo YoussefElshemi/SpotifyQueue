@@ -9,6 +9,11 @@ public readonly record struct SupportsVolume
         Value = value;
     }
 
+    public static implicit operator string(SupportsVolume value)
+    {
+        return value.Value.ToString();
+    }
+
     public static implicit operator bool(SupportsVolume value)
     {
         return value.Value;
