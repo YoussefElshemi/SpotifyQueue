@@ -17,4 +17,5 @@ public record SpotifyConfig
     public string VolumePath { get; set; } = null!;
     public string SeekPath { get; set; } = null!;
     public string RecommendationsPath { get; set; } = null!;
+    public string TransferPlaybackPath { get; set; } = null!;
 }

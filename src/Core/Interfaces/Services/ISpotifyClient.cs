@@ -22,4 +22,5 @@ public interface ISpotifyClient
     Task SetVolumeAsync(VolumePercent volumePercent, AccessToken accessToken);
     Task SeekAsync(ProgressMs progressMs, AccessToken accessToken);
     Task<RecommendationsResponse> GetRecommendationsAsync(RecommendationsRequest recommendationsRequest, AccessToken accessToken);
+    Task TransferPlaybackAsync(DeviceId deviceId, AccessToken accessToken);
 }

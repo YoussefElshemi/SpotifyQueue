@@ -44,7 +44,7 @@ public class SpotifyService(
     public async Task<QueueResponse?> GetQueueAsync()
     {
         var accessToken = await GetAccessTokenAsync();
-        if (await CheckDeviceWhitelist(accessToken))
+        if (await CheckDeviceWhitelistAsync(accessToken))
         {
             var queueResponse = await spotifyClient.GetQueueAsync(accessToken);
             return queueResponse;
@@ -56,7 +56,7 @@ public class SpotifyService(
     public async Task AddTrackAsync(TrackUri trackUri)
     {
         var accessToken = await GetAccessTokenAsync();
-        if (await CheckDeviceWhitelist(accessToken))
+        if (await CheckDeviceWhitelistAsync(accessToken))
         {
             await spotifyClient.AddTrackAsync(trackUri, accessToken);
         }
@@ -65,7 +65,7 @@ public class SpotifyService(
     public async Task NextTrackAsync()
     {
         var accessToken = await GetAccessTokenAsync();
-        if (await CheckDeviceWhitelist(accessToken))
+        if (await CheckDeviceWhitelistAsync(accessToken))
         {
             await spotifyClient.NextTrackAsync(accessToken);
         }
@@ -74,7 +74,7 @@ public class SpotifyService(
     public async Task PreviousTrackAsync()
     {
         var accessToken = await GetAccessTokenAsync();
-        if (await CheckDeviceWhitelist(accessToken))
+        if (await CheckDeviceWhitelistAsync(accessToken))
         {
             await spotifyClient.PreviousTrackAsync(accessToken);
         }
@@ -83,7 +83,7 @@ public class SpotifyService(
     public async Task PlayTrackAsync(TrackUri trackUri)
     {
         var accessToken = await GetAccessTokenAsync();
-        if (await CheckDeviceWhitelist(accessToken))
+        if (await CheckDeviceWhitelistAsync(accessToken))
         {
             await spotifyClient.PlayTrackAsync(trackUri, accessToken);
         }
@@ -92,7 +92,7 @@ public class SpotifyService(
     public async Task PlayAsync()
     {
         var accessToken = await GetAccessTokenAsync();
-        if (await CheckDeviceWhitelist(accessToken))
+        if (await CheckDeviceWhitelistAsync(accessToken))
         {
             await spotifyClient.PlayAsync(accessToken);
         }
@@ -101,7 +101,7 @@ public class SpotifyService(
     public async Task PauseAsync()
     {
         var accessToken = await GetAccessTokenAsync();
-        if (await CheckDeviceWhitelist(accessToken))
+        if (await CheckDeviceWhitelistAsync(accessToken))
         {
             await spotifyClient.PauseAsync(accessToken);
         }
@@ -110,7 +110,7 @@ public class SpotifyService(
     public async Task<StateResponse?> GetStateAsync()
     {
         var accessToken = await GetAccessTokenAsync();
-        if (await CheckDeviceWhitelist(accessToken))
+        if (await CheckDeviceWhitelistAsync(accessToken))
         {
             var stateResponse =  await spotifyClient.GetStateAsync(accessToken);
             return stateResponse;
@@ -122,7 +122,7 @@ public class SpotifyService(
     public async Task ShuffleAsync(ShuffleState shuffleState)
     {
         var accessToken = await GetAccessTokenAsync();
-        if (await CheckDeviceWhitelist(accessToken))
+        if (await CheckDeviceWhitelistAsync(accessToken))
         {
             await spotifyClient.ShuffleAsync(shuffleState, accessToken);
         }
@@ -131,7 +131,7 @@ public class SpotifyService(
     public async Task RepeatAsync(RepeatState repeatState)
     {
         var accessToken = await GetAccessTokenAsync();
-        if (await CheckDeviceWhitelist(accessToken))
+        if (await CheckDeviceWhitelistAsync(accessToken))
         {
             await spotifyClient.RepeatAsync(repeatState, accessToken);
         }
@@ -140,7 +140,7 @@ public class SpotifyService(
     public async Task SetVolumeAsync(VolumePercent volumePercent)
     {
         var accessToken = await GetAccessTokenAsync();
-        if (await CheckDeviceWhitelist(accessToken))
+        if (await CheckDeviceWhitelistAsync(accessToken))
         {
             await spotifyClient.SetVolumeAsync(volumePercent, accessToken);
         }
@@ -149,7 +149,7 @@ public class SpotifyService(
     public async Task SeekAsync(ProgressMs progressMs)
     {
         var accessToken = await GetAccessTokenAsync();
-        if (await CheckDeviceWhitelist(accessToken))
+        if (await CheckDeviceWhitelistAsync(accessToken))
         {
             await spotifyClient.SeekAsync(progressMs, accessToken);
         }
@@ -166,7 +166,7 @@ public class SpotifyService(
     public async Task QueueRecommendedAsync(RecommendationsRequest recommendationsRequest)
     {
         var accessToken = await GetAccessTokenAsync();
-        if (await CheckDeviceWhitelist(accessToken))
+        if (await CheckDeviceWhitelistAsync(accessToken))
         {
             var recommendationResponse = await spotifyClient.GetRecommendationsAsync(recommendationsRequest, accessToken);
             List<Task> tasks = [];
@@ -181,23 +181,48 @@ public class SpotifyService(
         }
     }
 
-    private async Task<bool> CheckDeviceWhitelist(AccessToken accessToken)
+    public async Task TransferPlaybackAsync(DeviceId deviceId)
     {
-        if (string.IsNullOrWhiteSpace(config.Value.SpotifyConfig.DeviceWhitelist))
-        {
-            return true;
-        }
+        var accessToken = await GetAccessTokenAsync();
+        await spotifyClient.TransferPlaybackAsync(deviceId, accessToken);
+    }
 
+    private async Task<bool> CheckDeviceWhitelistAsync(AccessToken accessToken)
+    {
         var devicesResponse = await spotifyClient.GetDevicesAsync(accessToken);
         var activeDevice = devicesResponse.Devices.FirstOrDefault(x => x.IsActive);
 
-        if (activeDevice == null)
+        if (string.IsNullOrWhiteSpace(config.Value.SpotifyConfig.DeviceWhitelist))
+        {
+            if (activeDevice is not null)
+            {
+                return true;
+            }
+
+            var device = devicesResponse.Devices.FirstOrDefault();
+            if (device is null)
+            {
+                return false;
+            }
+
+            await TransferPlaybackAsync(device.Id);
+            return true;
+        }
+
+        var whitelistedDevice = devicesResponse.Devices.FirstOrDefault(x => x.Name == config.Value.SpotifyConfig.DeviceWhitelist);
+        if (whitelistedDevice is null)
         {
             return false;
         }
 
-        if (activeDevice.Name == config.Value.SpotifyConfig.DeviceWhitelist)
+        if (whitelistedDevice.IsActive)
         {
+            return true;
+        }
+
+        if (activeDevice is null)
+        {
+            await TransferPlaybackAsync(whitelistedDevice.Id);
             return true;
         }
 

@@ -389,4 +389,26 @@ public class SpotifyClient(
 
         return RecommendationResponseMapper.Map(recommendationsResponseDto);
     }
+
+    public async Task TransferPlaybackAsync(DeviceId deviceId, AccessToken accessToken)
+    {
+        var url = $"{config.Value.SpotifyConfig.BaseUrl}{config.Value.SpotifyConfig.TransferPlaybackPath}";
+        var requestData = new Dictionary<string, string[]>
+        {
+            { "device_ids", [deviceId] }
+        };
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Put,
+            RequestUri = new Uri(url),
+            Content = new StringContent(JsonSerializer.Serialize(requestData)),
+            Headers =
+            {
+                Authorization = new AuthenticationHeaderValue("Bearer", accessToken)
+            }
+        };
+
+        await client.SendAsync(request);
+    }
 }

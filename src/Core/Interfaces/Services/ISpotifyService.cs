@@ -23,4 +23,5 @@ public interface ISpotifyService
     Task SeekAsync(ProgressMs progressMs);
     Task<RecommendationsResponse> GetRecommendationsAsync(RecommendationsRequest recommendationsRequest);
     Task QueueRecommendedAsync(RecommendationsRequest recommendationsRequest);
+    Task TransferPlaybackAsync(DeviceId deviceId);
 }
