@@ -25,14 +25,6 @@ public class SpotifyService(
         CacheTokens(refreshTokenResponse);
     }
 
-    public async Task<SearchResponse> SearchAsync(SearchRequest searchRequest)
-    {
-        var accessToken = await GetAccessTokenAsync();
-        var searchResponse = await spotifyClient.SearchAsync(searchRequest, accessToken);
-
-        return searchResponse;
-    }
-
     public async Task<DevicesResponse> GetDevicesAsync()
     {
         var accessToken = await GetAccessTokenAsync();
@@ -41,22 +33,119 @@ public class SpotifyService(
         return devicesResponse;
     }
 
-    public async Task<QueueResponse> GetQueueAsync()
+    public async Task<SearchResponse?> SearchAsync(SearchRequest searchRequest)
     {
         var accessToken = await GetAccessTokenAsync();
-        var queueResponse = await spotifyClient.GetQueueAsync(accessToken);
+        if (await CheckDeviceWhitelist(accessToken))
+        {
+            var searchResponse = await spotifyClient.SearchAsync(searchRequest, accessToken);
+            return searchResponse;
+        }
 
-        return queueResponse;
+        return null;
+    }
+
+    public async Task<QueueResponse?> GetQueueAsync()
+    {
+        var accessToken = await GetAccessTokenAsync();
+        if (await CheckDeviceWhitelist(accessToken))
+        {
+            var queueResponse = await spotifyClient.GetQueueAsync(accessToken);
+            return queueResponse;
+        }
+
+        return null;
     }
 
     public async Task AddTrackAsync(TrackUri trackUri)
     {
         var accessToken = await GetAccessTokenAsync();
-
-        if (string.IsNullOrWhiteSpace(config.Value.SpotifyConfig.DeviceWhitelist))
+        if (await CheckDeviceWhitelist(accessToken))
         {
             await spotifyClient.AddTrackAsync(trackUri, accessToken);
-            return;
+        };
+    }
+
+    public async Task NextTrackAsync()
+    {
+        var accessToken = await GetAccessTokenAsync();
+        if (await CheckDeviceWhitelist(accessToken))
+        {
+            await spotifyClient.NextTrackAsync(accessToken);
+        }
+    }
+
+    public async Task PreviousTrackAsync()
+    {
+        var accessToken = await GetAccessTokenAsync();
+        if (await CheckDeviceWhitelist(accessToken))
+        {
+            await spotifyClient.PreviousTrackAsync(accessToken);
+        }
+    }
+
+    public async Task PlayTrackAsync(TrackUri trackUri)
+    {
+        var accessToken = await GetAccessTokenAsync();
+        if (await CheckDeviceWhitelist(accessToken))
+        {
+            await spotifyClient.PlayTrackAsync(trackUri, accessToken);
+        }
+    }
+
+    public async Task PlayAsync()
+    {
+        var accessToken = await GetAccessTokenAsync();
+        if (await CheckDeviceWhitelist(accessToken))
+        {
+            await spotifyClient.PlayAsync(accessToken);
+        }
+    }
+
+    public async Task PauseAsync()
+    {
+        var accessToken = await GetAccessTokenAsync();
+        if (await CheckDeviceWhitelist(accessToken))
+        {
+            await spotifyClient.PauseAsync(accessToken);
+        }
+    }
+
+    public async Task<StateResponse?> GetStateAsync()
+    {
+        var accessToken = await GetAccessTokenAsync();
+        if (await CheckDeviceWhitelist(accessToken))
+        {
+            var stateResponse =  await spotifyClient.GetStateAsync(accessToken);
+            return stateResponse;
+        }
+
+        return null;
+    }
+
+    public async Task ShuffleAsync(ShuffleState shuffleState)
+    {
+        var accessToken = await GetAccessTokenAsync();
+        if (await CheckDeviceWhitelist(accessToken))
+        {
+            await spotifyClient.ShuffleAsync(shuffleState, accessToken);
+        }
+    }
+
+    public async Task RepeatAsync(RepeatState repeatState)
+    {
+        var accessToken = await GetAccessTokenAsync();
+        if (await CheckDeviceWhitelist(accessToken))
+        {
+            await spotifyClient.RepeatAsync(repeatState, accessToken);
+        }
+    }
+
+    private async Task<bool> CheckDeviceWhitelist(AccessToken accessToken)
+    {
+        if (string.IsNullOrWhiteSpace(config.Value.SpotifyConfig.DeviceWhitelist))
+        {
+            return true;
         }
 
         var devicesResponse = await spotifyClient.GetDevicesAsync(accessToken);
@@ -69,61 +158,11 @@ public class SpotifyService(
 
         if (activeDevice.Name == config.Value.SpotifyConfig.DeviceWhitelist)
         {
-            await spotifyClient.AddTrackAsync(trackUri, accessToken);
-            return;
+            return true;
         }
 
         throw new UnauthorizedAccessException($"Active device '{activeDevice.Name}' is not whitelisted.");
     }
-
-    public async Task NextTrackAsync()
-    {
-        var accessToken = await GetAccessTokenAsync();
-        await spotifyClient.NextTrackAsync(accessToken);
-    }
-
-    public async Task PreviousTrackAsync()
-    {
-        var accessToken = await GetAccessTokenAsync();
-        await spotifyClient.PreviousTrackAsync(accessToken);
-    }
-
-    public async Task PlayTrackAsync(TrackUri trackUri)
-    {
-        var accessToken = await GetAccessTokenAsync();
-        await spotifyClient.PlayTrackAsync(trackUri, accessToken);
-    }
-
-    public async Task PlayAsync()
-    {
-        var accessToken = await GetAccessTokenAsync();
-        await spotifyClient.PlayAsync(accessToken);
-    }
-
-    public async Task PauseAsync()
-    {
-        var accessToken = await GetAccessTokenAsync();
-        await spotifyClient.PauseAsync(accessToken);
-    }
-
-    public async Task<StateResponse> GetStateAsync()
-    {
-        var accessToken = await GetAccessTokenAsync();
-        return await spotifyClient.GetStateAsync(accessToken);
-    }
-
-    public async Task ShuffleAsync(ShuffleState shuffleState)
-    {
-        var accessToken = await GetAccessTokenAsync();
-        await spotifyClient.ShuffleAsync(shuffleState, accessToken);
-    }
-
-    public async Task RepeatAsync(RepeatState repeatState)
-    {
-        var accessToken = await GetAccessTokenAsync();
-        await spotifyClient.RepeatAsync(repeatState, accessToken);
-    }
-
 
     private async Task<AccessToken> GetAccessTokenAsync()
     {

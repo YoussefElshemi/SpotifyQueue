@@ -7,16 +7,16 @@ public interface ISpotifyService
 {
     Task AuthenticateAsync(Code code);
     Task RefreshTokenAsync(RefreshToken refreshToken);
-    Task<SearchResponse> SearchAsync(SearchRequest searchRequest);
     Task<DevicesResponse> GetDevicesAsync();
-    Task<QueueResponse> GetQueueAsync();
+    Task<StateResponse?> GetStateAsync();
+    Task<SearchResponse?> SearchAsync(SearchRequest searchRequest);
+    Task<QueueResponse?> GetQueueAsync();
     Task AddTrackAsync(TrackUri trackUri);
     Task NextTrackAsync();
     Task PreviousTrackAsync();
     Task PlayTrackAsync(TrackUri trackUri);
     Task PlayAsync();
     Task PauseAsync();
-    Task<StateResponse> GetStateAsync();
     Task ShuffleAsync(ShuffleState shuffleState);
     Task RepeatAsync(RepeatState repeatState);
 }

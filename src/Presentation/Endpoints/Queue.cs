@@ -18,7 +18,7 @@ public class Queue(
     {
         var queueResponse = await spotifyService.GetQueueAsync();
 
-        var queueResponseDto = QueueResponseDtoMapper.Map(queueResponse);
+        var queueResponseDto = QueueResponseDtoMapper.Map(queueResponse!);
 
         await SendAsync(queueResponseDto, cancellation: ct);
     }

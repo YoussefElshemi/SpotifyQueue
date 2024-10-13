@@ -18,7 +18,7 @@ public class State(
     {
         var stateResponse = await spotifyService.GetStateAsync();
 
-        var stateResponseDto = StateResponseDtoMapper.Map(stateResponse);
+        var stateResponseDto = StateResponseDtoMapper.Map(stateResponse!);
 
         await SendAsync(stateResponseDto, cancellation: ct);
     }
