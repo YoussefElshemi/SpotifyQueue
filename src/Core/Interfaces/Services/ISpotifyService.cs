@@ -22,4 +22,5 @@ public interface ISpotifyService
     Task SetVolumeAsync(VolumePercent volumePercent);
     Task SeekAsync(ProgressMs progressMs);
     Task<RecommendationsResponse> RecommendationAsync(ItemId itemId);
+    Task QueueRecommendedAsync(ItemId itemId);
 }

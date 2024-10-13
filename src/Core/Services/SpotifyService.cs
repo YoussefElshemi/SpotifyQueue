@@ -163,6 +163,20 @@ public class SpotifyService(
         return recommendationsResponse;
     }
 
+    public async Task QueueRecommendedAsync(ItemId itemId)
+    {
+        var accessToken = await GetAccessTokenAsync();
+        if (await CheckDeviceWhitelist(accessToken))
+        {
+            var recommendationResponse = await spotifyClient.RecommendationsAsync(itemId, accessToken);
+
+            foreach (var recommendation in recommendationResponse.Items)
+            {
+                await spotifyClient.AddTrackAsync(new TrackUri(recommendation.Uri), accessToken);
+            }
+        }
+    }
+
     private async Task<bool> CheckDeviceWhitelist(AccessToken accessToken)
     {
         if (string.IsNullOrWhiteSpace(config.Value.SpotifyConfig.DeviceWhitelist))
