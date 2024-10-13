@@ -9,7 +9,7 @@ public interface ISpotifyService
     Task RefreshTokenAsync(RefreshToken refreshToken);
     Task<DevicesResponse> GetDevicesAsync();
     Task<StateResponse?> GetStateAsync();
-    Task<SearchResponse?> SearchAsync(SearchRequest searchRequest);
+    Task<SearchResponse> SearchAsync(SearchRequest searchRequest);
     Task<QueueResponse?> GetQueueAsync();
     Task AddTrackAsync(TrackUri trackUri);
     Task NextTrackAsync();

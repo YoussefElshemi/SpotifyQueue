@@ -21,7 +21,7 @@ public class Search(
 
         var searchResponse = await spotifyService.SearchAsync(searchRequest);
 
-        var searchResponseDto = SearchResponseDtoMapper.Map(searchResponse!);
+        var searchResponseDto = SearchResponseDtoMapper.Map(searchResponse);
 
         await SendAsync(searchResponseDto, cancellation: ct);
     }

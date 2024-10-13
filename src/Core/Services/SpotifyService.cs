@@ -33,16 +33,12 @@ public class SpotifyService(
         return devicesResponse;
     }
 
-    public async Task<SearchResponse?> SearchAsync(SearchRequest searchRequest)
+    public async Task<SearchResponse> SearchAsync(SearchRequest searchRequest)
     {
         var accessToken = await GetAccessTokenAsync();
-        if (await CheckDeviceWhitelist(accessToken))
-        {
-            var searchResponse = await spotifyClient.SearchAsync(searchRequest, accessToken);
-            return searchResponse;
-        }
+        var searchResponse = await spotifyClient.SearchAsync(searchRequest, accessToken);
 
-        return null;
+        return searchResponse;
     }
 
     public async Task<QueueResponse?> GetQueueAsync()
