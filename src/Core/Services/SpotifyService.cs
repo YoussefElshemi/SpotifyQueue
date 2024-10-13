@@ -150,6 +150,15 @@ public class SpotifyService(
         }
     }
 
+    public async Task SeekAsync(ProgressMs progressMs)
+    {
+        var accessToken = await GetAccessTokenAsync();
+        if (await CheckDeviceWhitelist(accessToken))
+        {
+            await spotifyClient.SeekAsync(progressMs, accessToken);
+        }
+    }
+
     private async Task<bool> CheckDeviceWhitelist(AccessToken accessToken)
     {
         if (string.IsNullOrWhiteSpace(config.Value.SpotifyConfig.DeviceWhitelist))

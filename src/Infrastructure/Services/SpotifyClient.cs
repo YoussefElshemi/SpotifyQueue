@@ -341,4 +341,24 @@ public class SpotifyClient(
 
         await client.SendAsync(request);
     }
+
+    public async Task SeekAsync(ProgressMs progressMs, AccessToken accessToken)
+    {
+        var url = $"{config.Value.SpotifyConfig.BaseUrl}{config.Value.SpotifyConfig.SeekPath}";
+
+        var query = HttpUtility.ParseQueryString(string.Empty);
+        query.Add("position_ms", progressMs.ToString());
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Put,
+            RequestUri = new Uri($"{url}?{query}"),
+            Headers =
+            {
+                Authorization = new AuthenticationHeaderValue("Bearer", accessToken)
+            }
+        };
+
+        await client.SendAsync(request);
+    }
 }
