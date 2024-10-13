@@ -59,7 +59,7 @@ public class SpotifyService(
         if (await CheckDeviceWhitelist(accessToken))
         {
             await spotifyClient.AddTrackAsync(trackUri, accessToken);
-        };
+        }
     }
 
     public async Task NextTrackAsync()
@@ -155,6 +155,14 @@ public class SpotifyService(
         }
     }
 
+    public async Task<RecommendationsResponse> RecommendationAsync(ItemId itemId)
+    {
+        var accessToken = await GetAccessTokenAsync();
+        var recommendationsResponse = await spotifyClient.RecommendationsAsync(itemId, accessToken);
+
+        return recommendationsResponse;
+    }
+
     private async Task<bool> CheckDeviceWhitelist(AccessToken accessToken)
     {
         if (string.IsNullOrWhiteSpace(config.Value.SpotifyConfig.DeviceWhitelist))
@@ -167,7 +175,7 @@ public class SpotifyService(
 
         if (activeDevice == null)
         {
-            throw new InvalidOperationException("No active device found.");
+            return false;
         }
 
         if (activeDevice.Name == config.Value.SpotifyConfig.DeviceWhitelist)
@@ -175,7 +183,7 @@ public class SpotifyService(
             return true;
         }
 
-        throw new UnauthorizedAccessException($"Active device '{activeDevice.Name}' is not whitelisted.");
+        return false;
     }
 
     private async Task<AccessToken> GetAccessTokenAsync()

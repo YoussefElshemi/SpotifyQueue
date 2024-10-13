@@ -361,4 +361,28 @@ public class SpotifyClient(
 
         await client.SendAsync(request);
     }
+
+    public async Task<RecommendationsResponse> RecommendationsAsync(ItemId itemId, AccessToken accessToken)
+    {
+        var url = $"{config.Value.SpotifyConfig.BaseUrl}{config.Value.SpotifyConfig.RecommendationsPath}";
+
+        var query = HttpUtility.ParseQueryString(string.Empty);
+        query.Add("seed_tracks", itemId);
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri($"{url}?{query}"),
+            Headers =
+            {
+                Authorization = new AuthenticationHeaderValue("Bearer", accessToken)
+            }
+        };
+
+        var response = await client.SendAsync(request);
+        var content  = await response.Content.ReadAsStringAsync();
+        var recommendationsResponseDto = JsonSerializer.Deserialize<RecommendationResponseDto>(content)!;
+
+        return RecommendationResponseMapper.Map(recommendationsResponseDto);
+    }
 }
