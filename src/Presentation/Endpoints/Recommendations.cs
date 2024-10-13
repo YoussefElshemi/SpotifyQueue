@@ -1,5 +1,4 @@
 ﻿using Core.Interfaces.Services;
-using Core.ValueObjects;
 using FastEndpoints;
 using Presentation.Mappers;
 using Presentation.Models;
@@ -18,7 +17,9 @@ public class Recommendations(
 
     public override async Task HandleAsync(RecommendationsRequestDto recommendationsRequestDto, CancellationToken ct)
     {
-        var recommendationsResponse = await spotifyService.RecommendationAsync(new ItemId(recommendationsRequestDto.TrackId));
+        var recommendationsRequest = RecommendationsRequestMapper.Map(recommendationsRequestDto);
+
+        var recommendationsResponse = await spotifyService.GetRecommendationsAsync(recommendationsRequest);
 
         var recommendationsResponseDto = RecommendationsResponseDtoMapper.Map(recommendationsResponse);
 

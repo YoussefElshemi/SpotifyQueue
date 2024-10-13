@@ -21,5 +21,5 @@ public interface ISpotifyClient
     Task RepeatAsync(RepeatState repeatState, AccessToken accessToken);
     Task SetVolumeAsync(VolumePercent volumePercent, AccessToken accessToken);
     Task SeekAsync(ProgressMs progressMs, AccessToken accessToken);
-    Task<RecommendationsResponse> RecommendationsAsync(ItemId itemId, AccessToken accessToken);
+    Task<RecommendationsResponse> GetRecommendationsAsync(RecommendationsRequest recommendationsRequest, AccessToken accessToken);
 }

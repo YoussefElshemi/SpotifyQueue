@@ -84,14 +84,14 @@ public class SpotifyClient(
         query.Add("q", searchRequest.SearchQuery);
         query.Add("type", string.Join(',', searchRequest.Types).ToLower());
 
-        if (searchRequest.Limit is not null)
+        if (searchRequest.Limit.HasValue)
         {
-            query.Add("limit", searchRequest.Limit.ToString());
+            query.Add("limit", searchRequest.Limit.Value.ToString());
         }
 
-        if (searchRequest.Offset is not null)
+        if (searchRequest.Offset.HasValue)
         {
-            query.Add("offset", searchRequest.Offset.ToString());
+            query.Add("offset", searchRequest.Offset.Value.ToString());
         }
 
         var request = new HttpRequestMessage
@@ -362,12 +362,16 @@ public class SpotifyClient(
         await client.SendAsync(request);
     }
 
-    public async Task<RecommendationsResponse> RecommendationsAsync(ItemId itemId, AccessToken accessToken)
+    public async Task<RecommendationsResponse> GetRecommendationsAsync(RecommendationsRequest recommendationsRequest, AccessToken accessToken)
     {
         var url = $"{config.Value.SpotifyConfig.BaseUrl}{config.Value.SpotifyConfig.RecommendationsPath}";
 
         var query = HttpUtility.ParseQueryString(string.Empty);
-        query.Add("seed_tracks", itemId);
+        query.Add("seed_tracks", recommendationsRequest.ItemId);
+        if (recommendationsRequest.Limit.HasValue)
+        {
+            query.Add("limit", recommendationsRequest.Limit.Value.ToString());
+        }
 
         var request = new HttpRequestMessage
         {

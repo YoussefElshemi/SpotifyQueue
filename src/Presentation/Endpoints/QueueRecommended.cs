@@ -1,12 +1,13 @@
 ﻿using Core.Interfaces.Services;
 using Core.ValueObjects;
 using FastEndpoints;
+using Presentation.Mappers;
 using Presentation.Models;
 
 namespace Presentation.Endpoints;
 
 public class QueueRecommended(
-    ISpotifyService spotifyService) : Endpoint<QueueRecommendedRequestDto>
+    ISpotifyService spotifyService) : Endpoint<RecommendationsRequestDto>
 {
     public override void Configure()
     {
@@ -14,8 +15,9 @@ public class QueueRecommended(
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(QueueRecommendedRequestDto queueRecommendedRequestDto, CancellationToken ct)
+    public override async Task HandleAsync(RecommendationsRequestDto recommendationsRequestDto, CancellationToken ct)
     {
-        await spotifyService.QueueRecommendedAsync(new ItemId(queueRecommendedRequestDto.ItemId));
+        var recommendationsRequest = RecommendationsRequestMapper.Map(recommendationsRequestDto);
+        await spotifyService.QueueRecommendedAsync(recommendationsRequest);
     }
 }

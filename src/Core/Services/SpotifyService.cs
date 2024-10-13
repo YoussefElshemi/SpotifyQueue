@@ -155,25 +155,29 @@ public class SpotifyService(
         }
     }
 
-    public async Task<RecommendationsResponse> RecommendationAsync(ItemId itemId)
+    public async Task<RecommendationsResponse> GetRecommendationsAsync(RecommendationsRequest recommendationsRequest)
     {
         var accessToken = await GetAccessTokenAsync();
-        var recommendationsResponse = await spotifyClient.RecommendationsAsync(itemId, accessToken);
+        var recommendationsResponse = await spotifyClient.GetRecommendationsAsync(recommendationsRequest, accessToken);
 
         return recommendationsResponse;
     }
 
-    public async Task QueueRecommendedAsync(ItemId itemId)
+    public async Task QueueRecommendedAsync(RecommendationsRequest recommendationsRequest)
     {
         var accessToken = await GetAccessTokenAsync();
         if (await CheckDeviceWhitelist(accessToken))
         {
-            var recommendationResponse = await spotifyClient.RecommendationsAsync(itemId, accessToken);
+            var recommendationResponse = await spotifyClient.GetRecommendationsAsync(recommendationsRequest, accessToken);
+            List<Task> tasks = [];
 
             foreach (var recommendation in recommendationResponse.Items)
             {
-                await spotifyClient.AddTrackAsync(new TrackUri(recommendation.Uri), accessToken);
+                var task = spotifyClient.AddTrackAsync(new TrackUri(recommendation.Uri), accessToken);
+                tasks.Add(task);
             }
+
+            await Task.WhenAll(tasks);
         }
     }
 
