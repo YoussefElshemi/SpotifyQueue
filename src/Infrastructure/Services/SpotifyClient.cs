@@ -321,4 +321,24 @@ public class SpotifyClient(
 
         await client.SendAsync(request);
     }
+
+    public async Task SetVolumeAsync(VolumePercent volumePercent, AccessToken accessToken)
+    {
+        var url = $"{config.Value.SpotifyConfig.BaseUrl}{config.Value.SpotifyConfig.VolumePath}";
+
+        var query = HttpUtility.ParseQueryString(string.Empty);
+        query.Add("volume_percent", volumePercent.ToString());
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Put,
+            RequestUri = new Uri($"{url}?{query}"),
+            Headers =
+            {
+                Authorization = new AuthenticationHeaderValue("Bearer", accessToken)
+            }
+        };
+
+        await client.SendAsync(request);
+    }
 }

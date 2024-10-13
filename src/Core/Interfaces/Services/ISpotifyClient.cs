@@ -19,4 +19,5 @@ public interface ISpotifyClient
     Task<StateResponse> GetStateAsync(AccessToken accessToken);
     Task ShuffleAsync(ShuffleState shuffleState, AccessToken accessToken);
     Task RepeatAsync(RepeatState repeatState, AccessToken accessToken);
+    Task SetVolumeAsync(VolumePercent volumePercent, AccessToken accessToken);
 }

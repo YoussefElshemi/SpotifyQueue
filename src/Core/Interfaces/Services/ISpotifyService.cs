@@ -19,4 +19,5 @@ public interface ISpotifyService
     Task PauseAsync();
     Task ShuffleAsync(ShuffleState shuffleState);
     Task RepeatAsync(RepeatState repeatState);
+    Task SetVolumeAsync(VolumePercent volumePercent);
 }

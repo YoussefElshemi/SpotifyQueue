@@ -141,6 +141,15 @@ public class SpotifyService(
         }
     }
 
+    public async Task SetVolumeAsync(VolumePercent volumePercent)
+    {
+        var accessToken = await GetAccessTokenAsync();
+        if (await CheckDeviceWhitelist(accessToken))
+        {
+            await spotifyClient.SetVolumeAsync(volumePercent, accessToken);
+        }
+    }
+
     private async Task<bool> CheckDeviceWhitelist(AccessToken accessToken)
     {
         if (string.IsNullOrWhiteSpace(config.Value.SpotifyConfig.DeviceWhitelist))
