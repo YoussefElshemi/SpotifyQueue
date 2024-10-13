@@ -11,6 +11,7 @@ public class State(
     public override void Configure()
     {
         Get("/player");
+        Options(x => x.CacheOutput(p => p.Expire(TimeSpan.FromMilliseconds(500))));
         AllowAnonymous();
     }
 

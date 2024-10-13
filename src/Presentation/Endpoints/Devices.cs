@@ -11,6 +11,7 @@ public class Devices(
     public override void Configure()
     {
         Get("/devices");
+        Options(x => x.CacheOutput(p => p.Expire(TimeSpan.FromSeconds(1))));
         AllowAnonymous();
     }
 

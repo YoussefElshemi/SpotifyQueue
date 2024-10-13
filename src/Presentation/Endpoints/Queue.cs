@@ -11,6 +11,7 @@ public class Queue(
     public override void Configure()
     {
         Get("/queue");
+        Options(x => x.CacheOutput(p => p.Expire(TimeSpan.FromMilliseconds(500))));
         AllowAnonymous();
     }
 

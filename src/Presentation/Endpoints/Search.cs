@@ -10,7 +10,8 @@ public class Search(
 {
     public override void Configure()
     {
-        Post("/search");
+        Get("/search");
+        Options(x => x.CacheOutput(p => p.Expire(TimeSpan.FromSeconds(300))));
         AllowAnonymous();
     }
 

@@ -32,6 +32,8 @@ builder.Services.AddFastEndpoints();
 builder.Services.SwaggerDocument();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddMemoryCache();
+builder.Services.AddOutputCache();
+
 builder.Services.AddHostedService<AccessTokenRotatorService>();
 builder.Services.AddHttpClient<ISpotifyClient, SpotifyClient>();
 builder.Services.AddScoped<ISpotifyService, SpotifyService>();
@@ -42,6 +44,7 @@ app.UseCors("AllowAllOrigins");
 app.UseHttpsRedirection();
 app.UseFastEndpoints();
 app.UseSwaggerGen();
+app.UseOutputCache();
 
 var query = HttpUtility.ParseQueryString(string.Empty);
 query.Add("response_type", "code");
